@@ -2575,6 +2575,13 @@ class GatewayRunner:
                 return None
             return QQAdapter(config)
 
+        elif platform == Platform.REMOTE_DISCORD:
+            from gateway.platforms.remote_discord import RemoteDiscordAdapter, check_remote_discord_requirements
+            if not check_remote_discord_requirements():
+                logger.warning("RemoteDiscord: aiohttp not installed")
+                return None
+            return RemoteDiscordAdapter(config)
+
         return None
 
     def _is_user_authorized(self, source: SessionSource) -> bool:
