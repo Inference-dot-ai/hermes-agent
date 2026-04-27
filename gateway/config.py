@@ -67,7 +67,6 @@ class Platform(Enum):
     WEIXIN = "weixin"
     BLUEBUBBLES = "bluebubbles"
     QQBOT = "qqbot"
-    REMOTE_DISCORD = "remote_discord"
 
 
 @dataclass
@@ -823,14 +822,7 @@ def _apply_env_overrides(config: GatewayConfig) -> None:
         if Platform.DISCORD not in config.platforms:
             config.platforms[Platform.DISCORD] = PlatformConfig()
         config.platforms[Platform.DISCORD].reply_to_mode = discord_reply_mode
-
-    # Remote Discord (Inference AI: shared bot held by a central Cloudflare DO,
-    # events POSTed to this VM's HTTP server — see gateway/platforms/remote_discord.py).
-    if os.getenv("REMOTE_DISCORD_ENABLED", "").lower() in ("true", "1", "yes"):
-        if Platform.REMOTE_DISCORD not in config.platforms:
-            config.platforms[Platform.REMOTE_DISCORD] = PlatformConfig()
-        config.platforms[Platform.REMOTE_DISCORD].enabled = True
-
+    
     # WhatsApp (typically uses different auth mechanism)
     whatsapp_enabled = os.getenv("WHATSAPP_ENABLED", "").lower() in ("true", "1", "yes")
     if whatsapp_enabled:
